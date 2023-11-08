@@ -2,7 +2,7 @@
 {
     public class HelperClass
     {
-        public static IWebElement WaitForElementToBeVisible(IWebDriver driver, By by, int timeoutInSeconds)
+        public static IWebElement WaitForElementToBeVisible(IWebDriver driver, By by, int timeoutInSeconds=10)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
             return wait.Until(d =>

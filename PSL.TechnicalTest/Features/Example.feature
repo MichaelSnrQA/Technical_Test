@@ -4,9 +4,9 @@ User will nevigate to BBC news website and the search the word and verify word p
 
 
 Scenario: Search word on bbc and verify it
-	When User nevigate to BBC news website
-	Then User verify its on BBC news website
+	Given User nevigate to BBC news website
+	When User verify its on BBC news website
 	Then User Click on Search bar
-	Then User search word "Chorley"
+	And User search word "Chorley"
 	Then User verify word appear in "5" title of search result
 

@@ -4,48 +4,48 @@
 public class ExampleSteps
 {
     private IWebDriver driver;
-    int timeoutInSeconds = 10;
-    [When(@"User nevigate to BBC news website")]
-    public void GivenUserNevigateToBbc()
+    private BBCNewsPage bBCNewsPage;
+    private SearchPage searchPage;
+
+    public ExampleSteps()
     {
         ChromeOptions options = new ChromeOptions();
         options.AddArgument("--start-maximized");
         driver = new ChromeDriver(options);
-        driver.Navigate().GoToUrl("https://www.bbc.co.uk/news");
+        bBCNewsPage = new BBCNewsPage(driver);
+        searchPage = new SearchPage(driver);
+    }
+    
+    [Given(@"User nevigate to BBC news website")]
+    public void GivenUserNevigateToBbc()
+    {
+        bBCNewsPage.NavigateToBBCNewsPage("https://www.bbc.co.uk/news");
     }
 
-    [Then(@"User verify its on BBC news website")]
+    [When(@"User verify its on BBC news website")]
     public void ThenUserVerifyItsOnBBCNewsWebsite()
-    {
-        var newsPageElement = HelperClass.WaitForElementToBeVisible(driver, ExamplePage.NewsPage, timeoutInSeconds);
-        Assert.IsTrue(newsPageElement.Displayed, "User can't able to nevigate to BBC News page");
+    {     
+        Assert.IsTrue(bBCNewsPage.IsOnBBCNewsPage(), "User can't able to nevigate to BBC News page");
     }
 
     [Then(@"User Click on Search bar")]
     public void ThenUserClickOfSearchBar()
     {
-        driver.FindElement(ExamplePage.SearchBar).Click();
-        var searchInputElement = HelperClass.WaitForElementToBeVisible(driver, ExamplePage.SearchInput, timeoutInSeconds);
-        Assert.IsTrue(searchInputElement.Displayed, "User can't able to nevigate to Search page");
+        searchPage.ClickSearchBar();
     }
 
     [Then(@"User search word ""([^""]*)""")]
     public void ThenUserSearchWord(string word)
     {
-        driver.FindElement(ExamplePage.SearchInput).SendKeys(word);
-        driver.FindElement(ExamplePage.SearchButton).Click();
+        searchPage.SearchForWord(word);
     }
 
     [Then(@"User verify word appear in ""([^""]*)"" title of search result")]
     public void ThenUserVerifyWordAppearInTitleOfSearchResult(string time)
     {
-        string word = driver.FindElement(ExamplePage.SearchInput).GetAttribute("value");
+        string word = searchPage.GetSearchWord();
         int times = Convert.ToInt32(time);
-        for (int i = 1; i <= times; i++)
-        {
-            var title=driver.FindElement(ExamplePage.Title(i,word));
-            Assert.IsTrue(title.Displayed, $"The title number {i} does not contain {word}");
-        }
+        Assert.IsTrue(searchPage.VerifyWordInTitle(word, times), $"The title does not contain {word}");
         driver.Quit();
     }
 
