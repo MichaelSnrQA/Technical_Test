@@ -22,6 +22,7 @@ public class ExampleSteps
         bBCNewsPage.NavigateToBBCNewsPage("https://www.bbc.co.uk/news");
     }
 
+    
     [When(@"User verify its on BBC news website")]
     public void ThenUserVerifyItsOnBBCNewsWebsite()
     {     
